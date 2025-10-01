@@ -171,10 +171,15 @@ const addSlot = (day: keyof Schedule) => {
   if (slots.length > 0) {
     const lastSlot = slots[slots.length - 1]
     // Start new slot 1 hour after last slot ends
-    const lastEndParts = lastSlot.end.split(':')
-    const lastEndHour = parseInt(lastEndParts[0])
-    defaultStart = `${(lastEndHour + 1).toString().padStart(2, '0')}:00`
-    defaultEnd = `${(lastEndHour + 5).toString().padStart(2, '0')}:00`
+    if (lastSlot && lastSlot.end) {
+      const lastEndParts = lastSlot.end.split(':')
+      const lastEndHourStr = lastEndParts[0]
+      if (lastEndHourStr) {
+        const lastEndHour = parseInt(lastEndHourStr)
+        defaultStart = `${(lastEndHour + 1).toString().padStart(2, '0')}:00`
+        defaultEnd = `${(lastEndHour + 5).toString().padStart(2, '0')}:00`
+      }
+    }
   }
 
   slots.push({

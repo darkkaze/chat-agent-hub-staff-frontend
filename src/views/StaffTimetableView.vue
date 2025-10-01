@@ -214,7 +214,7 @@ const loadStaff = async () => {
 
     // Select first staff by default if available
     if (staff.value.length > 0 && !selectedStaff.value) {
-      selectedStaff.value = staff.value[0]
+      selectedStaff.value = staff.value[0] || null
     }
   } catch (error: unknown) {
     console.error('Error loading staff:', error)
@@ -276,7 +276,7 @@ const handleStaffDeleted = (staffId: string) => {
 
   // Deselect if deleted staff was selected
   if (selectedStaff.value?.id === staffId) {
-    selectedStaff.value = staff.value.length > 0 ? staff.value[0] : null
+    selectedStaff.value = staff.value.length > 0 ? (staff.value[0] || null) : null
   }
 
   showNotification(`Personal "${deletedStaff?.name}" desactivado exitosamente`)
