@@ -45,17 +45,19 @@ export interface StaffListResponse {
 // Helper functions
 export function parseSchedule(scheduleJson: string): Schedule {
   try {
-    return JSON.parse(scheduleJson)
-  } catch {
+    const parsed = JSON.parse(scheduleJson)
+    // Ensure all days exist with default empty arrays
     return {
-      monday: [],
-      tuesday: [],
-      wednesday: [],
-      thursday: [],
-      friday: [],
-      saturday: [],
-      sunday: [],
+      monday: parsed.monday || [],
+      tuesday: parsed.tuesday || [],
+      wednesday: parsed.wednesday || [],
+      thursday: parsed.thursday || [],
+      friday: parsed.friday || [],
+      saturday: parsed.saturday || [],
+      sunday: parsed.sunday || [],
     }
+  } catch {
+    return createEmptySchedule()
   }
 }
 
