@@ -188,6 +188,10 @@ const statusOptions = [
 
 // Computed
 const filteredStaff = computed(() => {
+  if (!staff.value || !Array.isArray(staff.value)) {
+    return []
+  }
+
   let filtered = [...staff.value]
 
   // Search filter

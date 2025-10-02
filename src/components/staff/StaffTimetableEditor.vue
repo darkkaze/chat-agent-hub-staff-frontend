@@ -35,15 +35,26 @@ Editor visual de horarios semanales
     <v-card-text>
       <div v-for="day in daysOfWeek" :key="day.key" class="day-section mb-4">
         <v-card variant="outlined">
-          <v-card-title class="text-subtitle-1 py-2">
+          <v-card-title class="text-h6 font-weight-bold py-3 day-header">
+            <v-icon class="me-2" color="primary">mdi-calendar</v-icon>
             {{ day.label }}
             <v-chip
               v-if="schedule[day.key].length === 0"
               color="grey"
-              size="x-small"
+              size="small"
+              variant="tonal"
               class="ml-2"
             >
               Sin horario
+            </v-chip>
+            <v-chip
+              v-else
+              color="primary"
+              size="small"
+              variant="tonal"
+              class="ml-2"
+            >
+              {{ schedule[day.key].length }} turno{{ schedule[day.key].length > 1 ? 's' : '' }}
             </v-chip>
           </v-card-title>
 
@@ -261,5 +272,10 @@ const saveSchedule = async () => {
 
 .day-section {
   margin-bottom: 16px;
+}
+
+.day-header {
+  background: rgba(var(--v-theme-primary), 0.05);
+  border-bottom: 2px solid rgba(var(--v-theme-primary), 0.2);
 }
 </style>
