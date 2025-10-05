@@ -77,10 +77,12 @@ Vista principal para gestión de horarios del personal
               </v-avatar>
               <div class="flex-1-1">
                 <div class="font-weight-medium">{{ item.name }}</div>
+                <div v-if="item.email" class="text-caption text-grey">{{ item.email }}</div>
                 <v-chip
                   :color="item.is_active ? 'success' : 'grey'"
                   size="x-small"
                   variant="tonal"
+                  class="mt-1"
                 >
                   {{ item.is_active ? 'Activo' : 'Inactivo' }}
                 </v-chip>

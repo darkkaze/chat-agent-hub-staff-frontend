@@ -13,7 +13,7 @@ El horario se edita en el componente principal
   >
     <v-card>
       <v-card-title>
-        <span class="text-h6">Editar Nombre</span>
+        <span class="text-h6">Editar Personal</span>
       </v-card-title>
 
       <v-card-text>
@@ -25,6 +25,16 @@ El horario se edita en el componente principal
             variant="outlined"
             density="compact"
             autofocus
+            class="mb-3"
+          />
+          <v-text-field
+            v-model="email"
+            label="Email (opcional)"
+            placeholder="Ej: juan@example.com"
+            :rules="[rules.email]"
+            variant="outlined"
+            density="compact"
+            type="email"
           />
         </v-form>
       </v-card-text>
@@ -67,24 +77,32 @@ const emit = defineEmits<{
 
 // State
 const name = ref('')
+const email = ref('')
 const isLoading = ref(false)
 
-// Watch for staff changes to initialize name
+// Watch for staff changes to initialize name and email
 watch(() => props.staff, (newStaff) => {
   if (newStaff) {
     name.value = newStaff.name
+    email.value = newStaff.email || ''
   }
 }, { immediate: true })
 
 // Validation rules
 const rules = {
-  required: (value: string) => !!value || 'Campo requerido'
+  required: (value: string) => !!value || 'Campo requerido',
+  email: (value: string) => {
+    if (!value) return true // Optional field
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return pattern.test(value) || 'Email inválido'
+  }
 }
 
 // Methods
 const handleCancel = () => {
   if (props.staff) {
     name.value = props.staff.name
+    email.value = props.staff.email || ''
   }
   emit('update:modelValue', false)
 }
@@ -97,14 +115,15 @@ const handleSave = async () => {
   try {
     const updatedStaff = await staffService.updateStaff(props.staff.id, {
       name: name.value.trim(),
+      email: email.value.trim() || undefined,
       schedule: props.staff.schedule  // Keep existing schedule
     })
 
     emit('updated', updatedStaff)
     emit('update:modelValue', false)
   } catch (error: unknown) {
-    console.error('Error updating staff name:', error)
-    alert('Error al actualizar el nombre')
+    console.error('Error updating staff:', error)
+    alert('Error al actualizar el personal')
   } finally {
     isLoading.value = false
   }

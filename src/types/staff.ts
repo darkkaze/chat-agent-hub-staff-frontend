@@ -22,6 +22,7 @@ export interface Schedule {
 export interface Staff {
   id: string
   name: string
+  email?: string
   schedule: string  // JSON string of Schedule
   is_active: boolean
   created_at: string
@@ -30,11 +31,13 @@ export interface Staff {
 
 export interface CreateStaffRequest {
   name: string
+  email?: string
   schedule?: string
 }
 
 export interface UpdateStaffRequest {
   name: string
+  email?: string
   schedule?: string
 }
 

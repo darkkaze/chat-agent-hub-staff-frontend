@@ -27,6 +27,16 @@ Modal para crear un nuevo miembro del personal
             variant="outlined"
             density="compact"
             autofocus
+            class="mb-3"
+          />
+          <v-text-field
+            v-model="email"
+            label="Email (opcional)"
+            placeholder="Ej: juan@example.com"
+            :rules="[rules.email]"
+            variant="outlined"
+            density="compact"
+            type="email"
           />
         </v-form>
       </v-card-text>
@@ -68,16 +78,23 @@ const emit = defineEmits<{
 
 // State
 const name = ref('')
+const email = ref('')
 const isLoading = ref(false)
 
 // Validation rules
 const rules = {
-  required: (value: string) => !!value || 'Campo requerido'
+  required: (value: string) => !!value || 'Campo requerido',
+  email: (value: string) => {
+    if (!value) return true // Optional field
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    return pattern.test(value) || 'Email inválido'
+  }
 }
 
 // Methods
 const handleCancel = () => {
   name.value = ''
+  email.value = ''
   emit('update:modelValue', false)
 }
 
@@ -89,6 +106,7 @@ const handleCreate = async () => {
   try {
     const newStaff = await staffService.createStaff({
       name: name.value.trim(),
+      email: email.value.trim() || undefined,
       schedule: JSON.stringify({
         monday: [],
         tuesday: [],
@@ -102,6 +120,7 @@ const handleCreate = async () => {
 
     emit('created', newStaff)
     name.value = ''
+    email.value = ''
     emit('update:modelValue', false)
   } catch (error: unknown) {
     console.error('Error creating staff:', error)
