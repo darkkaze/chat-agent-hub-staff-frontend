@@ -44,17 +44,6 @@ Vista principal para gestión de horarios del personal
             density="compact"
             clearable
             hide-details
-            class="mb-3"
-          />
-
-          <v-select
-            v-model="statusFilter"
-            :items="statusOptions"
-            placeholder="Todos"
-            variant="outlined"
-            density="compact"
-            clearable
-            hide-details
           />
         </div>
 
@@ -72,20 +61,12 @@ Vista principal para gestión de horarios del personal
             @click="selectStaff(item)"
           >
             <div class="d-flex align-center">
-              <v-avatar color="secondary" size="40" class="me-3">
-                <v-icon color="white">mdi-account</v-icon>
+              <v-avatar color="secondary" size="32" class="me-3">
+                <v-icon color="white" size="small">mdi-account</v-icon>
               </v-avatar>
               <div class="flex-1-1">
                 <div class="font-weight-medium">{{ item.name }}</div>
                 <div v-if="item.email" class="text-caption text-grey">{{ item.email }}</div>
-                <v-chip
-                  :color="item.is_active ? 'success' : 'grey'"
-                  size="x-small"
-                  variant="tonal"
-                  class="mt-1"
-                >
-                  {{ item.is_active ? 'Activo' : 'Inactivo' }}
-                </v-chip>
               </div>
             </div>
 
@@ -168,7 +149,6 @@ const staff = ref<Staff[]>([])
 const selectedStaff = ref<Staff | null>(null)
 const isLoading = ref(false)
 const searchQuery = ref('')
-const statusFilter = ref<boolean | null>(null)
 
 // Modal states
 const showCreateModal = ref(false)
@@ -182,12 +162,6 @@ const showSnackbar = ref(false)
 const snackbarMessage = ref('')
 const snackbarColor = ref<'success' | 'error'>('success')
 
-// Options
-const statusOptions = [
-  { title: 'Activos', value: true },
-  { title: 'Inactivos', value: false }
-]
-
 // Computed
 const filteredStaff = computed(() => {
   if (!staff.value || !Array.isArray(staff.value)) {
@@ -200,11 +174,6 @@ const filteredStaff = computed(() => {
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     filtered = filtered.filter(s => s.name.toLowerCase().includes(query))
-  }
-
-  // Status filter
-  if (statusFilter.value !== null) {
-    filtered = filtered.filter(s => s.is_active === statusFilter.value)
   }
 
   return filtered
